@@ -114,6 +114,8 @@ fac=ndays/nlabel  %number of days per label
     xlim=[jd0-1/48 jd1+1/48];
   elseif(mincut > fac);
     xlim=[jd0 jd1];
+  else
+    xlim=[jd0 jd1];
   end
 up=u(:,find(istack==1));
 if(isreal(up)),
