@@ -207,11 +207,11 @@ else
   yplot(:,3)=yp(:)*nan;
   xplot=xplot';
   yplot=yplot';
-  if(~isempty(find(finite(up(:))))),
+  if(isfinite(up(:))),
   plot([jd0 jd1],[0 0],'w-',xplot(:),yplot(:),'k-');...
   set(gca,'ylim',ylim);
   end
 end
-  set(gca,'xlim',xlim,'xtick',get(h(1),'xtick'),'xticklabels',[]);
+  set(gca,'xlim',xlim,'xtick',get(h(1),'xtick'),'xticklabel',[]);
 end
 set(0,'DefaultLineclipping','on')
