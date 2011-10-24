@@ -10,7 +10,7 @@
   v=cos(.1*jd(:));
 
 % convention: store velocity time series as complex vector:
-  w=u+i*v;
+  w=complex(u,v);
 
 % Call TIMEPLT specifying east and north velocity components
 % in the bottom panel, vector magnitude in the middle panel and a vector 
