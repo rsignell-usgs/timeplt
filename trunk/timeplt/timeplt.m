@@ -39,6 +39,9 @@ function [h]=timeplt(jd,u,istack,ylims);
 %         use the standard "ylabel" command.
 % 12-4-96 replaced vector stick plotting method from lots of 2 point
 %         objects to 1 object with nans.  Much faster plotting. 
+% 10-21-2011 fixed a problem where short time duration stick plots were
+%         being affected by round off error (just subtracted the start
+%         time and then added it back in at the end).
 %
 
 %-------------------------------------------------------------------
@@ -59,7 +62,7 @@ if strcmp(jd,'demo')
   jd=julian(start):julian(stop); 
   u=sin(.1*jd(:)).^2-.5;
   v=cos(.1*jd(:));
-  w=u+i*v;
+  w=complex(u,v);
 %w is vector, so must have it's own axes
   h=timeplt(jd,[u v abs(w) w],[1 1 2 3]); 
   title('Demo of Timeplt')
@@ -134,11 +137,11 @@ else
   set(gca,'units','pixels');
   ppos=get(gca,'position');
   set(gca,'units','norm');
-  d=diff(xlim)
-  uscale=(diff(xlim)/diff(ylim))*(ppos(4)/ppos(3)) 
+  d=diff(xlim-jd0);
+  uscale=(d/diff(ylim))*(ppos(4)/ppos(3));
   vp=imag(up);
   up=uscale.*real(up);
-  x=jd;
+  x=jd-jd0; % subtract start time to avoid round off
   xp=x;
   yp=zeros(size(xp));
   xplot=ones(length(xp),2);
@@ -151,8 +154,9 @@ else
   yplot(:,3)=yp(:)*nan;
   xplot=xplot';
   yplot=yplot';
-  if(~isempty(find(finite(up(:))))),
-   plot([jd0 jd1],[0 0],'w-',xplot(:),yplot(:),'k-');...
+  % add back start time here (xplot+jd0)
+  if(~isempty(find(isfinite(up(:))))),
+   plot([jd0 jd1],[0 0],'k-',xplot(:)+jd0,yplot(:),'k-');...
   set(gca,'ylim',ylim);
   end
 end
@@ -190,11 +194,11 @@ else
   set(gca,'units','pixels');
   ppos=get(gca,'position');
   set(gca,'units','norm');
-  d=diff(xlim)
-  uscale=(diff(xlim)/diff(ylim))*(ppos(4)/ppos(3))
+  d=diff(xlim-jd0);
+  uscale=(d/diff(ylim))*(ppos(4)/ppos(3));
   vp=imag(up);
   up=uscale.*real(up);
-  x=jd;
+  x=jd-jd0;
   xp=x;
   yp=zeros(size(xp));
   xplot=ones(length(xp),2);
@@ -208,7 +212,7 @@ else
   xplot=xplot';
   yplot=yplot';
   if(isfinite(up(:))),
-  plot([jd0 jd1],[0 0],'w-',xplot(:),yplot(:),'k-');...
+  plot([jd0 jd1],[0 0],'k-',xplot(:)+jd0,yplot(:),'k-');...
   set(gca,'ylim',ylim);
   end
 end
