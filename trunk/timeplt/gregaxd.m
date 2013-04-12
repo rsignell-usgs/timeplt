@@ -22,7 +22,7 @@ day=greg(:,3);
 dayticlab=sprintf('%2d',day);
 nday=length(day);
 dayticlab=reshape(dayticlab,2,nday)';
-set(gca,'xtick',jdtic,'Xticklabels',dayticlab)
+set(gca,'xtick',jdtic,'Xticklabel',dayticlab)
 %
 % find month labels
 %
