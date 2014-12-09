@@ -6,7 +6,7 @@ function xnew=gmin(x)
 [imax,jmax]=size(x);
 
 for j=1:jmax
-       good=find(finite(x(:,j)));
+       good=find(isfinite(x(:,j)));
        if length(good)>0
           xnew(j)=min(x(good,j));
        else
